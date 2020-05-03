@@ -698,6 +698,7 @@ name = "renefetcher"
 version = "0.1.0"
 dependencies = [
  "dirs",
+ "hyper",
  "reqwest",
  "serde",
  "serde_json",
