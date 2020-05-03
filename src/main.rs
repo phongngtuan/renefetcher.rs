@@ -1,12 +1,11 @@
-use std::collections::HashMap;
+mod telegram;
+use telegram::Telegram;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Hello, world!");
-    let resp = reqwest::get("https://httpbin.org/ip")
-    .await?
-    .json::<HashMap<String, String>>()
-    .await?;
+    let telegram = Telegram::new();
+    let resp = telegram.get_update().await?;
     println!("{:#?}", resp);
     Ok(())
 }
