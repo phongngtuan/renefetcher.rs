@@ -1,14 +1,20 @@
 use renefetcher::telegram::Telegram;
+use std::{thread, time};
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() {
     println!("Hello, world!");
     let telegram = Telegram::new();
+    let mut updates = telegram.get_updates();
 
     loop {
         println!("Looping");
-        let resp = telegram.get_update().await?;
-        println!("{:#?}", resp);
+        match updates.run() {
+            Ok(resp) => {
+                // println!("{:#?}", resp);
+                let wait_time = time::Duration::from_millis(1000);
+                thread::sleep(wait_time);
+            }
+            _ => {}
+        };
     }
-    Ok(())
 }
