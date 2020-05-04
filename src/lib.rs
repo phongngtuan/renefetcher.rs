@@ -1,2 +1,2 @@
-mod api;
-mod telegram;
+pub mod api;
+pub mod telegram;

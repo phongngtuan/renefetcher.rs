@@ -60,4 +60,12 @@ impl Telegram {
         .await?;
         Ok(resp.result.remove(0))
     }
+
+    pub async fn set_webhook(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let base_url = "https://api.telegram.org/bot";
+        let get_updates_url = format!("{}{}/setWebhook", base_url, self.token);
+        let resp = reqwest::get(&get_updates_url) .await?.text().await?;
+        println!("{}", resp);
+        Ok(())
+    }
 }
