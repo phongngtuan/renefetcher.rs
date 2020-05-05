@@ -1,5 +1,6 @@
 use clap::*;
 use std::fs;
+use renefetcher::api::process;
 use renefetcher::config::Config;
 use renefetcher::telegram::Telegram;
 use std::{thread, time};
@@ -22,15 +23,18 @@ fn main() {
     let telegram = Telegram::new(&config.telegram.token);
     let mut updates = telegram.get_updates();
 
-    loop {
-        println!("Looping");
-        match updates.run() {
-            Ok(resp) => {
-                // println!("{:#?}", resp);
-                let wait_time = time::Duration::from_millis(1000);
-                thread::sleep(wait_time);
-            }
-            _ => {}
-        };
-    }
+    // loop {
+    //     println!("Looping");
+    //     match updates.run() {
+    //         Ok(resp) => {
+    //             // println!("{:#?}", resp);
+    //             for update in resp {
+    //                 process(&update);
+    //             }
+    //             let wait_time = time::Duration::from_millis(1000);
+    //             thread::sleep(wait_time);
+    //         }
+    //         _ => {}
+    //     };
+    // }
 }
