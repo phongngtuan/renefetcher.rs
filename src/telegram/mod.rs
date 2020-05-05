@@ -1,8 +1,6 @@
-use serde::{Deserialize};
-use std::fs;
-use std::path::PathBuf;
+use serde::Deserialize;
+
 use reqwest::blocking::Client;
-use dirs;
 
 #[derive(Deserialize, Debug)]
 pub struct Update {
@@ -38,10 +36,10 @@ pub struct User {
 }
 
 pub struct Telegram {
-    token: String
+    token: String,
 }
 
-pub struct GetUpdates{
+pub struct GetUpdates {
     token: String,
     last_offset: i32,
 }
@@ -53,10 +51,11 @@ impl GetUpdates {
         let client = Client::new();
 
         let params = [("offset", self.last_offset.to_string())];
-        let resp = client.get(&get_updates_url)
-        .form(&params)
-        .send()?
-        .json::<Response<Update>>()?;
+        let resp = client
+            .get(&get_updates_url)
+            .form(&params)
+            .send()?
+            .json::<Response<Update>>()?;
         println!("Updates: {:#?}", resp);
         let last_update_id: i32 = resp.result.iter().map(|u| u.update_id).max().unwrap_or(-1);
         self.last_offset = last_update_id + 1;
@@ -65,8 +64,8 @@ impl GetUpdates {
     }
 }
 
-pub struct SendMessage{
-    token: String
+pub struct SendMessage {
+    token: String,
 }
 
 impl SendMessage {
@@ -77,13 +76,8 @@ impl SendMessage {
         let client = Client::new();
         let chat_id_param = chat_id.to_string();
 
-        let params: Vec<(&str, &str)> = vec![
-            ("chat_id", &chat_id_param),
-            ("text"   , text),
-        ];
-        let resp = client.post(&url)
-        .form(&params)
-        .send()?;
+        let params: Vec<(&str, &str)> = vec![("chat_id", &chat_id_param), ("text", text)];
+        let resp = client.post(&url).form(&params).send()?;
         println!("Updates: {:#?}", resp);
 
         Ok(())
@@ -93,7 +87,7 @@ impl SendMessage {
 impl Telegram {
     pub fn new(token: &str) -> Self {
         Telegram {
-            token: String::from(token)
+            token: String::from(token),
         }
     }
 

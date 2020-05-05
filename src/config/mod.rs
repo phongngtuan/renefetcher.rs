@@ -1,4 +1,4 @@
-use serde::{Deserialize};
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
@@ -36,7 +36,8 @@ mod test {
 
     #[test]
     fn good_config() {
-        let config= Config::from_str(r#"
+        let config = Config::from_str(
+            r#"
         [db]
         host = "1.2.3.4"
         port = 56789
@@ -45,7 +46,8 @@ mod test {
 
         [telegram]
         token = "test_token"
-        "#);
+        "#,
+        );
         println!("{:?}", config);
         assert!(config.is_ok(), "config should be good");
         let config = config.unwrap();

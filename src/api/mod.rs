@@ -7,8 +7,13 @@ pub enum Command {
 pub fn process(update: &Update) -> Option<Command> {
     println!("> Processing {:?}", update);
     match update.message.text.as_str() {
-        "/start" => Some(Command::Subscribe {username: update.message.chat.username.clone(), chat_id: update.message.chat.id}),
-        "/stop"  => Some(Command::Unsubscribe {chat_id: update.message.chat.id}),
-        _        => None
+        "/start" => Some(Command::Subscribe {
+            username: update.message.chat.username.clone(),
+            chat_id: update.message.chat.id,
+        }),
+        "/stop" => Some(Command::Unsubscribe {
+            chat_id: update.message.chat.id,
+        }),
+        _ => None,
     }
 }
