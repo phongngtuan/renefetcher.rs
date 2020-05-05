@@ -6,8 +6,8 @@ use dirs;
 
 #[derive(Deserialize, Debug)]
 pub struct Update {
-    update_id: i32,
-    message: Message,
+    pub update_id: i32,
+    pub message: Message,
 }
 
 #[derive(Deserialize, Debug)]
@@ -18,23 +18,23 @@ pub struct Response<A> {
 
 #[derive(Deserialize, Debug)]
 pub struct Message {
-    message_id: i32,
-    chat: Chat,
-    text: String,
-    from: User,
+    pub message_id: i32,
+    pub chat: Chat,
+    pub text: String,
+    pub from: User,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct Chat {
-    id: i32,
-    username: String,
+    pub id: i32,
+    pub username: String,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct User {
-    id: i32,
-    is_bot: bool,
-    username: String,
+    pub id: i32,
+    pub is_bot: bool,
+    pub username: String,
 }
 
 pub struct Telegram {
@@ -65,6 +65,31 @@ impl GetUpdates {
     }
 }
 
+pub struct SendMessage{
+    token: String
+}
+
+impl SendMessage {
+    pub fn run(&self, chat_id: i32, text: &str) -> Result<(), Box<dyn std::error::Error>> {
+        let base_url = "https://api.telegram.org/bot";
+        let url = format!("{}{}/sendMessage", base_url, self.token);
+
+        let client = Client::new();
+        let chat_id_param = chat_id.to_string();
+
+        let params: Vec<(&str, &str)> = vec![
+            ("chat_id", &chat_id_param),
+            ("text"   , text),
+        ];
+        let resp = client.post(&url)
+        .form(&params)
+        .send()?;
+        println!("Updates: {:#?}", resp);
+
+        Ok(())
+    }
+}
+
 impl Telegram {
     pub fn new(token: &str) -> Self {
         Telegram {
@@ -74,8 +99,14 @@ impl Telegram {
 
     pub fn get_updates(&self) -> GetUpdates {
         GetUpdates {
-            token: self.token.clone(),
+            token: self.token.clone(), //TODO: not clone this
             last_offset: 0,
+        }
+    }
+
+    pub fn send_message(&self) -> SendMessage {
+        SendMessage {
+            token: self.token.clone(),
         }
     }
 }
