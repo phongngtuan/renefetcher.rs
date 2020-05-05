@@ -46,21 +46,6 @@ pub struct GetUpdates{
     last_offset: i32,
 }
 
-// fn get_updates(offset: i32, token: &str) -> Result<Update, Box<dyn std::error::Error>> {
-//     let base_url = "https://api.telegram.org/bot";
-//     let get_updates_url = format!("{}{}/getUpdates", base_url, token);
-//     let client = reqwest::Client::new();
-    
-//     let params = [("offset", offset.to_string())];
-//     let mut resp = client.get(&get_updates_url)
-//     .form(&params)
-//     .send()
-//     .await?
-//     .json::<Response<Update>>()
-//     .await?;
-//     Ok(resp.result.remove(0))
-// }
-
 impl GetUpdates {
     pub fn run(&mut self) -> Result<Vec<Update>, Box<dyn std::error::Error>> {
         let base_url = "https://api.telegram.org/bot";
@@ -81,13 +66,9 @@ impl GetUpdates {
 }
 
 impl Telegram {
-    pub fn new() -> Self {
-        let mut token_file = dirs::home_dir().unwrap_or(PathBuf::new());
-        token_file.push(".telegram_token");
-        println!("{:?}", token_file);
-        let token = fs::read_to_string(token_file).unwrap();
+    pub fn new(token: &str) -> Self {
         Telegram {
-            token
+            token: String::from(token)
         }
     }
 
@@ -96,13 +77,5 @@ impl Telegram {
             token: self.token.clone(),
             last_offset: 0,
         }
-    }
-
-    pub async fn set_webhook(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let base_url = "https://api.telegram.org/bot";
-        let get_updates_url = format!("{}{}/setWebhook", base_url, self.token);
-        let resp = reqwest::get(&get_updates_url) .await?.text().await?;
-        println!("{}", resp);
-        Ok(())
     }
 }
